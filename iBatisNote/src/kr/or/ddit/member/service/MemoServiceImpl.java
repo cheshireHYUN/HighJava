@@ -16,13 +16,16 @@ import kr.or.ddit.util.sqlMapClientFactory;
 // IMemoService 인터페이스는 IMemoDAO 인터페이스와 내용이 같다
 public class MemoServiceImpl implements IMemoService{
 	
-	private static IMemoService memoService;
 	private IMemoDAO memoDAO; 
 	private SqlMapClient smc;
 	
-	public MemoServiceImpl() {
+	private static IMemoService memoService;
+	
+	//또 싱글톤
+	private MemoServiceImpl() {
 		memoDAO = MemoDAOImpl.getInstance();
 		smc = sqlMapClientFactory.getInstance();
+		//이제 memoDAO와 smc를 쓸수있음
 	}
 	
 	public static IMemoService getInstance() {
@@ -31,15 +34,18 @@ public class MemoServiceImpl implements IMemoService{
 		}
 		
 		return memoService;
+		// 즉 여기엔 insertMemo(MemoVO mv) 이런 오버라이드된 메소드들이 들어있다
 	}
 	
 	///////////////////////////////////////////////////////
 
 	@Override
 	public int insertMemo(MemoVO mv) {
+		int cnt = 0;
 		try {
 			smc.startTransaction();//트랜잭션 시작
-			int cnt = memoDAO.updateMemo(smc, mv); //삽입 수행
+			cnt = memoDAO.insertMemo(smc, mv); //삽입 수행
+			//memoDAO.insertMemo에는 smc.update가 들어있고....
 			smc.commitTransaction(); // 커밋...
 		} catch (SQLException e) {
 			try {
@@ -48,23 +54,63 @@ public class MemoServiceImpl implements IMemoService{
 				e1.printStackTrace();
 			} 
 		} 
-		return memoDAO.insertMemo(smc,mv);
+		return cnt;
 	}
 
 	@Override
 	public int deleteMemo(String no) {
-		// TODO Auto-generated method stub
-		return 0;
+		int cnt = 0;
+		try {
+			smc.startTransaction();
+			cnt = memoDAO.deleteMemo(smc, no);
+			smc.commitTransaction(); // 커밋...
+		} catch (SQLException e) {
+			try {
+				smc.endTransaction(); //문제시 롤백
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			} 
+		} 
+		return cnt;
 	}
 
 	@Override
 	public int updateMemo(MemoVO mv) {
-		// TODO Auto-generated method stub
-		return 0;
+		int cnt = 0;
+		try {
+			smc.startTransaction();
+			cnt = memoDAO.updateMemo(smc,mv);
+			smc.commitTransaction(); // 커밋...
+		} catch (SQLException e) {
+			try {
+				smc.endTransaction(); //문제시 롤백
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			} 
+		} 
+		return cnt;
 	}
 
 	@Override
 	public List<MemoVO> displayAllMemoList() {
+		List<MemoVO> list = null;
+		try {
+			smc.startTransaction();
+			list = memoDAO.displayAllMemoList(smc);
+			smc.commitTransaction(); // 커밋...
+		} catch (SQLException e) {
+			try {
+				smc.endTransaction(); //문제시 롤백
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			} 
+		} 
+		return list;
+	}
+
+
+	@Override
+	public List<MemoVO> searchMemoList(MemoVO mv) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -75,37 +121,6 @@ public class MemoServiceImpl implements IMemoService{
 		return false;
 	}
 
-	@Override
-	public List<MemoVO> searchMemoList(MemoVO mv) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-//	@Override
-//	public int deleteMemo(String no) {
-//		return memoDAO.deleteMemo(no);
-//	}
-//
-//	@Override
-//	public int updateMemo(MemoVO mv) {
-//		return memoDAO.updateMemo(mv);
-//	}
-//
-//	@Override
-//	public List<MemoVO> displayAllMemoList() {
-//		return memoDAO.displayAllMemoList();
-//	}
-//
-//	@Override
-//	public List<MemoVO> searchMemoList(MemoVO mv) {
-//		return memoDAO.searchMemoList(mv);
-//	}
-//
-//	@Override
-//	public boolean checkMemo(String no) {
-//		return memoDAO.checkMemo(no);
-//	}
 	
 	
 

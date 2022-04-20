@@ -9,11 +9,12 @@ import kr.or.ddit.member.service.MemoServiceImpl;
 import kr.or.ddit.member.vo.MemoVO;
 
 public class Main {
+
 	private IMemoService memoService;
 	private Scanner scan = new Scanner(System.in); 
-	
-	public Main() {
-		memoService = new MemoServiceImpl();
+
+	public Main() {		
+		memoService = MemoServiceImpl.getInstance();
 	}
 	
 	public static void main(String[] args) {
@@ -80,8 +81,6 @@ public class Main {
 		System.out.println("작성자 : ");
 		String writer = scan.nextLine();
 		
-		System.out.println("작성날짜 : ");
-		String date = scan.nextLine();
 
 		System.out.println("내용 : ");
 		String content = scan.nextLine();
@@ -89,7 +88,6 @@ public class Main {
 		MemoVO mv = new MemoVO();
 		mv.setTitle(title);
 		mv.setWriter(writer);
-		mv.setDate(date);
 		mv.setContent(content);
 		
 		int cnt = memoService.insertMemo(mv); //memoService의 insertMemo메소드가 memoDAO에게 데베와 통신하라고 명령!
@@ -112,6 +110,7 @@ public class Main {
 		scan.nextLine(); //버퍼 비워놓기
 		
 		int cnt = memoService.deleteMemo(no);
+		
 		if(cnt>0) {
 			System.out.println(no+"번 게시물을 삭제하였습니다.");
 		}else {
@@ -146,17 +145,11 @@ public class Main {
 		scan.nextLine();
 		System.out.println("제목 >> ");
 		String title = scan.nextLine();
-		System.out.println("작성자 >> ");
-		String writer = scan.nextLine();
-		System.out.println("작성날짜 >> ");
-		String date = scan.nextLine();
 		System.out.println("내용 >> ");
 		String content = scan.nextLine();
 		
 		MemoVO mv = new MemoVO();
 		mv.setTitle(title);
-		mv.setWriter(writer);
-		mv.setDate(date);
 		mv.setContent(content);
 		mv.setNo(no);
 		
