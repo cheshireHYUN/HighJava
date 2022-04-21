@@ -10,7 +10,7 @@ public interface IMemoService {
 	public int deleteMemo(String no);
 	public int updateMemo(MemoVO mv);
 	public List<MemoVO> displayAllMemoList();
-	public boolean checkMemo(String no);
+	public int checkMemo(String no);
 	public List<MemoVO> searchMemoList(MemoVO mv);
 
 }

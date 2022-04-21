@@ -3,14 +3,6 @@
 			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="memo">
-	
-	<resultMap class="memoVO" id="memoMap">
-		<result property="no" column="board_no"/>
-		<result property="title" column="board_title"/>
-		<result property="writer" column="board_writer"/>
-		<result property="date" column="board_date"/>
-		<result property="content" column="board_content"/>
-	</resultMap>
 
 
 	<insert id="insertMemo" parameterClass="memoVO">
@@ -22,7 +14,7 @@
 	</insert>
 	
 	
- 	<delete id="deleteMemo" parameterClass="String">
+ 	<delete id="deleteMemo" parameterClass="String" >
 		delete from jdbc_board
 		where board_no = #no#
 	</delete>
@@ -35,12 +27,45 @@
 		where board_no = #no#
 	</update>
 	
-	<select id="displayAllMemoList" resultClass="memVO">
+	
+	<resultMap class="memoVO" id="memoMap">
+		<result property="no" column="board_no"/>
+		<result property="title" column="board_title"/>
+		<result property="writer" column="board_writer"/>
+		<result property="date" column="board_date"/>
+		<result property="content" column="board_content"/>
+	</resultMap>
+	
+	
+	<select id="displayAllMemoList" resultMap="memoMap" >
 		 select *
 		   from jdbc_board
-	</select> 
+	</select>
+
 	
+	<select id="checkMemo" parameterClass="String" resultClass="int">
+		select count(*) from jdbc_board
+		 where board_no = #no#
+	</select>
 	
+	<select id="searchMemo" parameterClass="memoVO" resultMap="memoMap">
+			select * from jdbc_board where 1=1
+			<isNotEmpty property="no">
+				and board_no = #no#
+			</isNotEmpty>
+			<isNotEmpty property="title">
+				and board_title like '%' ||#title#|| '%'
+			</isNotEmpty>
+			<isNotEmpty property="writer">
+				 and board_writer = #writer#
+			</isNotEmpty>
+			<isNotEmpty property="date">
+				and board_date like '%' ||#date#|| '%'
+			</isNotEmpty>
+			<isNotEmpty property="content">
+				and board_content like '%' ||#content#|| '%'
+			</isNotEmpty>
+	</select>
 
 	
 </sqlMap>

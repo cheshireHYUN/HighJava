@@ -10,7 +10,7 @@ public interface IMemoDAO {
 	public int deleteMemo(SqlMapClient smc, String no);
 	public int updateMemo(SqlMapClient smc, MemoVO mv);
 	public List<MemoVO> displayAllMemoList(SqlMapClient smc);
-	public boolean checkMemo(SqlMapClient smc, String no);
+	public int checkMemo(SqlMapClient smc, String no);
 	public List<MemoVO> searchMemoList(SqlMapClient smc, MemoVO mv);
 	
 

@@ -81,7 +81,6 @@ public class MemoDAOImpl implements IMemoDAO{
 	
 	@Override
 	public List<MemoVO> displayAllMemoList(SqlMapClient smc) {
-		
 		List<MemoVO> memoList = new ArrayList<MemoVO>();
 		try {
 			memoList = smc.queryForList("memo.displayAllMemoList");
@@ -96,37 +95,28 @@ public class MemoDAOImpl implements IMemoDAO{
 	
 	
 	@Override
-	public boolean checkMemo(SqlMapClient smc, String no) {
-		boolean chk = false;
-//		try {
-//			
-//			
-//			}
-//			
-//			if(cnt>0) {
-//				chk=true;
-//			}
-//			
-//			
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			throw new RuntimeException("checkMemo 예외 발생",e);
-//		}
-		return chk;
+	public int checkMemo(SqlMapClient smc, String no) {
+		int cnt = 0;
+		try {
+			cnt = (int) smc.queryForObject("memo.checkMemo",no);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("checkMemo 예외 발생",e);
+		}
+		return cnt;
 	}
 
 	
 	@Override
 	public List<MemoVO> searchMemoList(SqlMapClient smc, MemoVO mv) {
 		List<MemoVO> memoList2 = new ArrayList<MemoVO>();
-//		
-//		try {
-//			}
-//
-//		}catch(SQLException e) {
-//			e.printStackTrace();
-//			throw new RuntimeException(" searchMemoList 예외 발생",e);
-//		}	
+		
+		try {
+			memoList2 = smc.queryForList("memo.searchMemo",mv);
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("searchMemoList 예외 발생",e);
+		}	
 		return memoList2;
 	}
 	

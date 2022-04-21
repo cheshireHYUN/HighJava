@@ -109,13 +109,20 @@ public class Main {
 		String no = scan.next();
 		scan.nextLine(); //버퍼 비워놓기
 		
-		int cnt = memoService.deleteMemo(no);
-		
-		if(cnt>0) {
-			System.out.println(no+"번 게시물을 삭제하였습니다.");
+		int chk = memoService.checkMemo(no);
+		if(chk==0) {
+			System.out.println(no+"번 게시물은 존재하지 않습니다");
 		}else {
-			System.out.println(no+"번 게시물 삭제에 실패하였습니다");
+			int cnt = memoService.deleteMemo(no);
+			
+			if(cnt>0) {
+				System.out.println(no+"번 게시물을 삭제하였습니다.");
+			}else {
+				System.out.println(no+"번 게시물 삭제에 실패하였습니다");
+			}
 		}
+		
+		
 		
 	}
 	
@@ -124,7 +131,7 @@ public class Main {
 	
 	
 	private void updateMemo() {
-		boolean chk = false;
+		int chk = 0;
 		String no = "";
 		do {
 			System.out.println();
@@ -133,14 +140,14 @@ public class Main {
 			
 			no = scan.next();
 			
-			chk = checkMemo(no);
+			chk = memoService.checkMemo(no);
 			
-			if(chk==false) {
+			if(chk==0) {
 				System.out.println(no+"번 게시물은 존재하지 않습니다.");
 				System.out.println("다시 입력하세요");
 			}
 			
-		} while(chk==false); //중복 없을때
+		} while(chk==0); //중복 없을때
 		
 		scan.nextLine();
 		System.out.println("제목 >> ");
@@ -228,7 +235,7 @@ public class Main {
 			System.out.println(" no\tTITLE\t\tWriter\t\tDate\t\tContent");
 			System.out.println("-------------------------------------------------------------------");
 			for(MemoVO mv : memoList2) {
-				System.out.println("  "+mv.getNo()+"\t"+mv.getTitle()+"\t"
+				System.out.print("  "+mv.getNo()+"\t"+mv.getTitle()+"\t"
 									+mv.getWriter()+"\t"+mv.getDate()+"\t"+mv.getContent()+"\n");				
 			}
 		}
@@ -237,9 +244,5 @@ public class Main {
 	
 	
 	
-	
-	private boolean checkMemo(String no) {
-		return memoService.checkMemo(no);
-	}
 
 }
